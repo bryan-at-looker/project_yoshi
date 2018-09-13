@@ -26,7 +26,7 @@ function create_query(API_URL, token,slug,dynamic_query,chart_type) {
 		body.fields = dynamic_query.selected
 		body.sorts = dynamic_query.sorts
 	}
-		if (chart_type) { 
+	if (chart_type) { 
 		body.vis_config = {"type": chart_type}
 	};
 	var options = {
@@ -88,12 +88,18 @@ function run_query(API_URL, token, query_id){
 	})
 }
 
-function add_element_to_dashboard (API_URL, token, dashboard_id, query_id) {
+function add_element_to_dashboard (API_URL, token, dashboard_id, query_id, path, sql_slug) {
 	var body = {
 		"dashboard_id": dashboard_id,
 		"query_id": query_id,
 		"type": "vis",
-		"title": "SQL Query Element"
+		"title": "SQL Query Element",
+		"note_text": path+sql_slug,
+	    // "note_text": "https://demo.looker.com/sql/dmssqzhbjvtjs5",
+	    // "note_text_as_html": '<a href="https://demo.looker.com/sql/dmssqzhbjvtjs5">hello</a>',
+	    "note_display": "below",
+	    "note_state": "collapsed"
+
 	}
 	var options = {
 		"method": "post",
@@ -118,40 +124,45 @@ chrome.storage.sync.get(['chart_type','dashboard_default','api_key','api_secret'
 	var hash_position = window.location.href.indexOf("#")
 
 
-var sql_slug = window.location.href.substring(path.length + url_position, hash_position)
-	console.log(items)
-	console.log(path,path.length)
-	console.log(sql_slug)
-var dashboard_id = window.location.hash.split(',')[0].substring(1)
-var chart_type = window.location.hash.split(',')[1]
+	var sql_slug = window.location.href.substring(path.length + url_position, hash_position)
+	var dashboard_id = window.location.hash.split(',')[0].substring(1)
+	var chart_type = window.location.hash.split(',')[1]
 
-login(API_URL,CLIENT_ID,CLIENT_SECRET).then(function(access_token) {
-	ACCESS_TOKEN = access_token;
-	return access_token;
-})
-.then(function(access_token) {
-	create_query(API_URL,access_token,sql_slug)
-	.then(function(query_id){
-		QUERY_ID = query_id;
-		return QUERY_ID;
+	login(API_URL,CLIENT_ID,CLIENT_SECRET).then(function(access_token) {
+		ACCESS_TOKEN = access_token;
+		return access_token;
 	})
-	.then(function(){
-		run_query(API_URL, ACCESS_TOKEN, QUERY_ID)
-		.then(function(dynamics_fields){
-			create_query(API_URL, ACCESS_TOKEN, sql_slug, dynamics_fields, chart_type)
-			.then(function(query_id){
-				QUERY_ID_DYNAMIC = query_id
-				return query_id
-			})
-			.then(function(){
-				add_element_to_dashboard(API_URL, ACCESS_TOKEN, dashboard_id, QUERY_ID_DYNAMIC)
+	.then(function(access_token) {
+		create_query(API_URL,access_token,sql_slug)
+		.then(function(query_id){
+			QUERY_ID = query_id;
+			return QUERY_ID;
+		})
+		.then(function(){
+			run_query(API_URL, ACCESS_TOKEN, QUERY_ID)
+			.then(function(dynamics_fields){
+				create_query(API_URL, ACCESS_TOKEN, sql_slug, dynamics_fields, chart_type)
+				.then(function(query_id){
+					QUERY_ID_DYNAMIC = query_id
+					return query_id
+				})
 				.then(function(){
-					alert('Success');
+					add_element_to_dashboard(API_URL, ACCESS_TOKEN, dashboard_id, QUERY_ID_DYNAMIC, path, sql_slug)
+					.then(function(){
+						confirmation = `<lk-message-banner context="content" class="ng-isolate-scope" id="add_to_dashboard_confirmation" ><!-- ngRepeat: message in messages track by $index --><div class="banners ng-scope" ng-repeat="message in messages track by $index" ng-show="messages.length" aria-hidden="false"><div class="banner success" style="margin-bottom: 10px;" ng-class="message.level" ng-show="message.level != 'error' || showError($index)" aria-hidden="false"><div class="banner-headline"><div class="icon"><i class="lk-icon-info-filled"></i><i class="lk-icon-warning-filled"></i></div><div class="message"><div ng-bind-html="message.html" class="ng-binding">SQL Runner Query has been
+						added to the “<a href="/dashboards/` + dashboard_id + `">` + dashboard_id + `</a>”
+						Dashboard.</div><!-- ngIf: message.details --><!-- ngIf: message.lookmlPosition --></div><div class="buttons ng-hide" ng-show="showMoreErrorsButton($index)" aria-hidden="true"><button class="btn btn-default ng-binding" lk-track-action="expand" lk-track-attrs="{&quot;more_error_count&quot;: moreErrorsCount}" lk-track-name="message_banner" ng-click="toggleMoreErrors()" ng-hide="showMoreErrors" aria-hidden="false">Show NaN more errors</button><button class="btn btn-default ng-binding ng-hide" lk-track-action="collapse" lk-track-attrs="{&quot;more_error_count&quot;: moreErrorsCount}" lk-track-name="message_banner" ng-click="toggleMoreErrors()" ng-show="showMoreErrors" aria-hidden="true">Collapse NaN errors</button></div><div class="close"><i class="lk-icon-close" lk-click="dismiss(message)" lk-track-action="Dismiss" lk-track-name="message" ng-show="message.isDismissable" aria-hidden="false"></i></div></div><pre class="message-explaination ng-binding ng-hide" ng-bind-html="message.explanation" ng-show="message.explanation" aria-hidden="true"></pre></div></div><!-- end ngRepeat: message in messages track by $index --></lk-message-banner>`
+						
+						$("#lk-content").prepend(confirmation);
+						close_confirmation = $('.lk-icon-close');
+						close_confirmation.click(function() {
+							$('#add_to_dashboard_confirmation').remove();
+						});
+					})
 				})
 			})
 		})
 	})
-})
 });
 
 
