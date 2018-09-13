@@ -7,7 +7,7 @@ function login(API_URL,CLIENT_ID,CLIENT_SECRET) {
 	.then(function(response) {
 		return response.json();
 	})
-	.then(function(json) {
+	.then(function(json) {qqwqw1
 		return json.access_token;
 	})
 	.catch(function(err) {
@@ -56,7 +56,6 @@ function run_query(API_URL, token, query_id){
 	.then(function(response) {
 
 		var fields = response.fields.dimensions;
-		console.log(fields);
 
 		var dynamic_fields = [];
 		var selected = [];
