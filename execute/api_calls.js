@@ -7,7 +7,7 @@ function login(API_URL,CLIENT_ID,CLIENT_SECRET) {
 	.then(function(response) {
 		return response.json();
 	})
-	.then(function(json) {
+	.then(function(json) {qqwqw1
 		return json.access_token;
 	})
 	.catch(function(err) {
