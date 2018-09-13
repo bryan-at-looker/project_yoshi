@@ -7,7 +7,7 @@ function login(API_URL,CLIENT_ID,CLIENT_SECRET) {
 	.then(function(response) {
 		return response.json();
 	})
-	.then(function(json) {qqwqw1
+	.then(function(json) {
 		return json.access_token;
 	})
 	.catch(function(err) {
@@ -146,7 +146,15 @@ login(API_URL,CLIENT_ID,CLIENT_SECRET).then(function(access_token) {
 			.then(function(){
 				add_element_to_dashboard(API_URL, ACCESS_TOKEN, dashboard_id, QUERY_ID_DYNAMIC)
 				.then(function(){
-					alert('Success');
+					confirmation = `<lk-message-banner context="content" class="ng-isolate-scope" id="add_to_dashboard_confirmation" ><!-- ngRepeat: message in messages track by $index --><div class="banners ng-scope" ng-repeat="message in messages track by $index" ng-show="messages.length" aria-hidden="false"><div class="banner success" style="margin-bottom: 10px;" ng-class="message.level" ng-show="message.level != 'error' || showError($index)" aria-hidden="false"><div class="banner-headline"><div class="icon"><i class="lk-icon-info-filled"></i><i class="lk-icon-warning-filled"></i></div><div class="message"><div ng-bind-html="message.html" class="ng-binding">SQL Runner Query has been
+									added to the “<a href="/dashboards/` + dashboard_id + `">` + dashboard_id + `</a>”
+									Dashboard.</div><!-- ngIf: message.details --><!-- ngIf: message.lookmlPosition --></div><div class="buttons ng-hide" ng-show="showMoreErrorsButton($index)" aria-hidden="true"><button class="btn btn-default ng-binding" lk-track-action="expand" lk-track-attrs="{&quot;more_error_count&quot;: moreErrorsCount}" lk-track-name="message_banner" ng-click="toggleMoreErrors()" ng-hide="showMoreErrors" aria-hidden="false">Show NaN more errors</button><button class="btn btn-default ng-binding ng-hide" lk-track-action="collapse" lk-track-attrs="{&quot;more_error_count&quot;: moreErrorsCount}" lk-track-name="message_banner" ng-click="toggleMoreErrors()" ng-show="showMoreErrors" aria-hidden="true">Collapse NaN errors</button></div><div class="close"><i class="lk-icon-close" lk-click="dismiss(message)" lk-track-action="Dismiss" lk-track-name="message" ng-show="message.isDismissable" aria-hidden="false"></i></div></div><pre class="message-explaination ng-binding ng-hide" ng-bind-html="message.explanation" ng-show="message.explanation" aria-hidden="true"></pre></div></div><!-- end ngRepeat: message in messages track by $index --></lk-message-banner>`
+			
+					$("#lk-content").prepend(confirmation);
+					close_confirmation = $('.lk-icon-close');
+					close_confirmation.click(function() {
+				        $('#add_to_dashboard_confirmation').remove();
+				    });
 				})
 			})
 		})
