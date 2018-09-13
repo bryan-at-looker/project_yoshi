@@ -56,6 +56,7 @@ function run_query(API_URL, token, query_id){
 	.then(function(response) {
 
 		var fields = response.fields.dimensions;
+		console.log(fields);
 
 		var dynamic_fields = [];
 		var selected = [];
