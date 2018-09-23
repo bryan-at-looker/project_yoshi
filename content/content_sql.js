@@ -58,7 +58,7 @@ chrome.storage.sync.get(['chart_type', 'dashboard_default', 'host'], function(it
 
               var license_features_button = `
               <script>
-              var editorExtensionId = "alfbbdbigdbjnmdhhkefemcapmeobghn";
+              var editorExtensionId = "jjagjckjimdpmabijmdblcgpbchpogho";
 
               function showOptions() {
                 chrome.runtime.sendMessage(editorExtensionId, {"type": "option"}, 
