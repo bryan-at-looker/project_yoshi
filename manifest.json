@@ -1,7 +1,7 @@
 {
-	"name": "Project Yoshi",
-	"description" : "hello",
-	"version": "1.1",
+	"name": "Looker SQL > Dashboard",
+	"description" : "General build for Looker hosted instances. Utilizes Looker's APIs to add SQL onto dashboards.",
+	"version": "1.5",
 	"options_ui": { "page": "options.html" , "open_in_tab": false },
 	"permissions": ["notifications","storage", "activeTab", "http://*/", "https://*/", "http://localhost:9999/*", "https://localhost:9999/*","https://demo.looker.com/*"],
 	"background": {
@@ -9,7 +9,7 @@
 		"persistent": false
 	},
 	"externally_connectable": {
-		"matches": ["https://localhost:9999/*","http://localhost:9999/*","https://demo.looker.com/*"]
+		"matches": ["https://localhost:9999/*","http://localhost:9999/*","https://demo.looker.com/*","https://*.looker.com/*"]
 	},
 	"content_scripts": [
 		{
